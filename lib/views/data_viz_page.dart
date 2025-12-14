@@ -13,7 +13,7 @@ class DataVisualization extends StatelessWidget {
         child: Icon(
           Icons.show_chart,
           size: 100,
-          color: CACHET.DARK_BLUE,
+          color: CachetColors.DARK_BLUE,
         ),
         //child: CircularProgressIndicator(),
       ),

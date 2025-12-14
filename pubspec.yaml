@@ -1,6 +1,6 @@
 name: pulmonary_monitor_app
 description: App for monitoring of pulmonary (i.e. respiratory) health build using CARP.
-version: 1.10.0
+version: 2.0.0
 homepage: https://github.com/cph-cachet/pulmonary_monitor_app
 publish_to: 'none'
 
@@ -16,33 +16,40 @@ dependencies:
   flutter:
     sdk: flutter
 
-  carp_core: ^1.8.0
-  carp_mobile_sensing: ^1.12.5
-  carp_context_package: ^1.10.0
-  carp_connectivity_package: ^1.4.0
-  carp_survey_package: ^1.8.0
-  carp_audio_package: ^1.4.0
+  # carp_core: ^1.8.0
+  # carp_mobile_sensing: ^1.12.5
+  # carp_context_package: ^1.10.0
+  # carp_connectivity_package: ^1.4.0
+  # carp_survey_package: ^1.8.0
+  # carp_audio_package: ^1.4.0
   # carp_communication_package: ^1.4.0
   
-  research_package: ^1.7.0
+  research_package: ^2.0.0
   cognition_package: ^1.6.0
 
   flutter_launcher_icons: ^0.14.0
 
 # Overriding carp libraries to use a local copy
 dependency_overrides:
-  # carp_core:
-  #   path: ../carp/carp.sensing-flutter/carp_core/
-  # carp_mobile_sensing:
-  #   path: ../carp/carp.sensing-flutter/carp_mobile_sensing/
-  # carp_context_package:
-  #   path: ../carp/carp.sensing-flutter/packages/carp_context_package/
-  # carp_connectivity_package:
-  #   path: ../carp/carp.sensing-flutter/packages/carp_connectivity_package/
-  # carp_audio_package:
-  #   path: ../carp/carp.sensing-flutter/packages/carp_audio_package/
-  # carp_survey_package:
-  #   path: ../carp/carp.sensing-flutter/packages/carp_survey_package/
+  carp_core:
+    path: ../carp/carp.sensing-flutter/carp_core/
+  carp_mobile_sensing:
+    path: ../carp/carp.sensing-flutter/carp_mobile_sensing/
+  carp_context_package:
+    path: ../carp/carp.sensing-flutter/packages/carp_context_package/
+  carp_connectivity_package:
+    path: ../carp/carp.sensing-flutter/packages/carp_connectivity_package/
+  carp_audio_package:
+    path: ../carp/carp.sensing-flutter/packages/carp_audio_package/
+  carp_survey_package:
+    path: ../carp/carp.sensing-flutter/packages/carp_survey_package/
+  carp_communication_package:
+    path: ../carp/carp.sensing-flutter/packages/carp_communication_package/
+  carp_apps_package:
+    path: ../carp/carp.sensing-flutter/packages/carp_apps_package/
+  carp_health_package:
+    path: ../carp/carp.sensing-flutter/packages/carp_health_package/
+
 
   # cognition_package:
   #   path: ../cognition_package/  

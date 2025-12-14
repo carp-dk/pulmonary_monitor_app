@@ -28,7 +28,7 @@ class AudioUserTask extends UserTask {
   /// Callback when recording is to start.
   /// When recording is started, background sensing is also started.
   void onRecord() {
-    backgroundTaskExecutor.start();
+    backgroundTaskExecutor.resume();
 
     // start the countdown, once tick pr. second.
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
@@ -39,7 +39,7 @@ class AudioUserTask extends UserTask {
         _countDownController.close();
 
         // stop the background sensing and mark this task as done
-        backgroundTaskExecutor.stop();
+        backgroundTaskExecutor.pause();
         super.onDone();
       }
     });

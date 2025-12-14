@@ -1,7 +1,9 @@
 part of '../main.dart';
 
 class TaskList extends StatefulWidget {
-  const TaskList({super.key});
+  final TaskListViewModel viewModel;
+
+  const TaskList(this.viewModel, {super.key});
 
   static const String routeName = '/tasklist';
 
@@ -10,15 +12,13 @@ class TaskList extends StatefulWidget {
 }
 
 class TaskListState extends State<TaskList> {
-  static final GlobalKey<ScaffoldState> scaffoldKey =
-      GlobalKey<ScaffoldState>();
+  TaskListViewModel get model => widget.viewModel;
 
   @override
   Widget build(BuildContext context) {
-    List<UserTask> tasks = bloc.tasks.reversed.toList();
+    List<UserTask> tasks = model.tasks;
 
     return Scaffold(
-      key: scaffoldKey,
       appBar: AppBar(
         title: const Text('Tasks'),
         //TODO - move actions/settings icon to the app level.
@@ -112,37 +112,37 @@ class TaskListState extends State<TaskList> {
   Map<String, Icon> get taskTypeIcon => {
         SurveyUserTask.SURVEY_TYPE: const Icon(
           Icons.description,
-          color: CACHET.ORANGE,
+          color: CachetColors.ORANGE,
           size: 40,
         ),
         SurveyUserTask.COGNITIVE_ASSESSMENT_TYPE: const Icon(
           Icons.face,
-          color: CACHET.YELLOW,
+          color: CachetColors.YELLOW,
           size: 40,
         ),
         AudioUserTask.AUDIO_TYPE: const Icon(
           Icons.record_voice_over,
-          color: CACHET.GREEN,
+          color: CachetColors.GREEN,
           size: 40,
         ),
         BackgroundSensingUserTask.SENSING_TYPE: const Icon(
           Icons.settings_input_antenna,
-          color: CACHET.CACHET_BLUE,
+          color: CachetColors.CACHET_BLUE,
           size: 40,
         ),
       };
 
   Map<UserTaskState, Icon> get taskStateIcon => {
         UserTaskState.initialized:
-            const Icon(Icons.stream, color: CACHET.YELLOW),
+            const Icon(Icons.stream, color: CachetColors.YELLOW),
         UserTaskState.enqueued:
-            const Icon(Icons.notifications, color: CACHET.YELLOW),
+            const Icon(Icons.notifications, color: CachetColors.YELLOW),
         UserTaskState.dequeued:
-            const Icon(Icons.not_interested_outlined, color: CACHET.RED),
+            const Icon(Icons.not_interested_outlined, color: CachetColors.RED),
         UserTaskState.started:
-            const Icon(Icons.radio_button_checked, color: CACHET.GREEN),
+            const Icon(Icons.radio_button_checked, color: CachetColors.GREEN),
         UserTaskState.canceled:
-            const Icon(Icons.radio_button_off, color: CACHET.RED),
-        UserTaskState.done: const Icon(Icons.check, color: CACHET.GREEN),
+            const Icon(Icons.radio_button_off, color: CachetColors.RED),
+        UserTaskState.done: const Icon(Icons.check, color: CachetColors.GREEN),
       };
 }

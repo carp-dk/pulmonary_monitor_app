@@ -6,8 +6,6 @@ class App extends StatelessWidget {
   /// This methods is used to set up the entire app, including:
   Future<bool> init(BuildContext context) async {
     await LocationManager().requestPermission();
-    await bloc.init();
-
     return true;
   }
 
@@ -42,16 +40,16 @@ class PulmonaryMonitorAppState extends State<PulmonaryMonitorApp> {
   // been started due to the user selecting a notification
   int _selectedIndex = 1;
 
-  final _pages = [
-    const StudyVisualization(),
-    const TaskList(),
-    const DataVisualization(),
-  ];
+  final _pages = <Widget>[];
 
   @override
-  void dispose() {
-    bloc.stop();
-    super.dispose();
+  void initState() {
+    _pages.addAll([
+      StudyPage(StudyViewModel(bloc.study)),
+      TaskList(TaskListViewModel()),
+      DataVisualization(),
+    ]);
+    super.initState();
   }
 
   @override
@@ -67,27 +65,28 @@ class PulmonaryMonitorAppState extends State<PulmonaryMonitorApp> {
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
       ),
-//      floatingActionButton: new FloatingActionButton(
-//        onPressed: restart,
-//        tooltip: 'Restart study & probes',
-//        child: bloc.isRunning ? Icon(Icons.pause) : Icon(Icons.play_arrow),
-//      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _onButtonPressed,
+        child: ListenableBuilder(
+          listenable: bloc.sensing.client,
+          builder: (_, __) => !bloc.hasStudy
+              ? Icon(Icons.add)
+              : !bloc.isDeployed
+                  ? Icon(Icons.refresh)
+                  : bloc.isRunning
+                      ? Icon(Icons.pause)
+                      : Icon(Icons.play_arrow),
+        ),
+      ),
     );
   }
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
+  void _onItemTapped(int index) => setState(() => _selectedIndex = index);
 
-  void restart() {
-    setState(() {
-      if (bloc.isRunning) {
-        bloc.stop();
-      } else {
-        bloc.start();
-      }
-    });
-  }
+  /// Handle press on the floating action button.
+  /// If there is no study, add a study first.
+  /// If the study is not yet deployed, deploy it.
+  /// Once deployed, resume/pause sensing.
+  void _onButtonPressed() =>
+      bloc.sensing.client.studies.isEmpty ? bloc.addStudy() : bloc.runStudy();
 }

@@ -110,7 +110,7 @@ class AudioMeasurePageState extends State<AudioMeasurePage> {
                 : const Text('Press here to start recording...'),
             IconButton(
               iconSize: 80,
-              color: CACHET.RED,
+              color: CachetColors.RED,
               icon: const Icon(Icons.radio_button_checked),
               onPressed: () {
                 // callback to audio user task
