@@ -6,16 +6,18 @@
 
 library;
 
+// ignore_for_file: depend_on_referenced_packages
 import 'dart:convert';
 import 'dart:async';
+import 'dart:io' show Platform;
 
 import 'package:flutter/material.dart' hide TimeOfDay;
 import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'package:carp_core/carp_core.dart';
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_connectivity_package/connectivity.dart';
-import 'package:carp_communication_package/communication.dart';
 import 'package:carp_context_package/carp_context_package.dart';
 import 'package:carp_survey_package/survey.dart';
 import 'package:carp_audio_package/media.dart';
@@ -36,13 +38,14 @@ part 'view_models/probe_descriptions.dart';
 part 'view_models/study_view_model.dart';
 part 'view_models/task_list_view_model.dart';
 part 'views/task_list_page.dart';
-part 'views/data_viz_page.dart';
 part 'views/study_page.dart';
 part 'views/informed_consent_page.dart';
-part 'views/cachet.dart';
+part 'views/colors.dart';
 part 'views/audio_measure_page.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   // Make sure to initialize CAMS and packages for json serialization
   CarpMobileSensing.ensureInitialized();
   ResearchPackage.ensureInitialized();
@@ -51,7 +54,7 @@ void main() {
   runApp(const App());
 }
 
-final bloc = SensingBLoC();
+final bloc = SensingBLoC(debugLevel: DebugLevel.debug);
 
 String toJsonString(Object object) =>
     const JsonEncoder.withIndent(' ').convert(object);

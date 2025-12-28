@@ -3,26 +3,41 @@ part of 'main.dart';
 class App extends StatelessWidget {
   const App({super.key});
 
-  /// This methods is used to set up the entire app, including:
-  Future<bool> init(BuildContext context) async {
-    await LocationManager().requestPermission();
+  /// Initialize the app and the sensing, including requesting necessary permissions.
+  Future<bool> init() async {
+    await Permission.locationWhenInUse.request();
+    await Permission.locationAlways.request();
+    await Permission.activityRecognition.request();
+
+    // For Android, also request notification permission
+    Platform.isAndroid ? await Permission.notification.request() : null;
+
+    await bloc.sensing.initialize();
+
     return true;
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData.dark(),
+      // theme: ThemeData.light(),
+      // darkTheme: ThemeData.dark(),
+      theme: researchPackageTheme,
+      darkTheme: researchPackageDarkTheme,
+      debugShowCheckedModeBanner: false,
+      title: 'Pulmonary Monitor',
       home: FutureBuilder(
-        future: init(context),
+        future: init(),
         builder: (context, snapshot) => (!snapshot.hasData)
             ? Scaffold(
                 backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 body: const Center(
-                    child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [CircularProgressIndicator()],
-                )))
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [CircularProgressIndicator()],
+                  ),
+                ),
+              )
             : PulmonaryMonitorApp(key: key),
       ),
     );
@@ -36,18 +51,15 @@ class PulmonaryMonitorApp extends StatefulWidget {
 }
 
 class PulmonaryMonitorAppState extends State<PulmonaryMonitorApp> {
-  // when the app starts, show the task list (index =1) since the app may have
-  // been started due to the user selecting a notification
-  int _selectedIndex = 1;
+  int _selectedIndex = 0;
 
   final _pages = <Widget>[];
 
   @override
   void initState() {
     _pages.addAll([
-      StudyPage(StudyViewModel(bloc.study)),
-      TaskList(TaskListViewModel()),
-      DataVisualization(),
+      StudyPage(bloc.studyViewModel),
+      TaskListPage(bloc.taskListViewModel),
     ]);
     super.initState();
   }
@@ -60,7 +72,6 @@ class PulmonaryMonitorAppState extends State<PulmonaryMonitorApp> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.school), label: 'Study'),
           BottomNavigationBarItem(icon: Icon(Icons.spellcheck), label: 'Tasks'),
-          BottomNavigationBarItem(icon: Icon(Icons.show_chart), label: 'Data'),
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
@@ -69,13 +80,13 @@ class PulmonaryMonitorAppState extends State<PulmonaryMonitorApp> {
         onPressed: _onButtonPressed,
         child: ListenableBuilder(
           listenable: bloc.sensing.client,
-          builder: (_, __) => !bloc.hasStudy
+          builder: (_, _) => !bloc.hasStudy
               ? Icon(Icons.add)
               : !bloc.isDeployed
-                  ? Icon(Icons.refresh)
-                  : bloc.isRunning
-                      ? Icon(Icons.pause)
-                      : Icon(Icons.play_arrow),
+              ? Icon(Icons.refresh)
+              : bloc.isRunning
+              ? Icon(Icons.pause)
+              : Icon(Icons.play_arrow),
         ),
       ),
     );

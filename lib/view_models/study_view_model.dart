@@ -13,7 +13,7 @@ class StudyViewModel with ChangeNotifier {
   }
 
   SmartphoneDeployment? get deployment => _study?.deployment;
-  Image get image => Image.asset('assets/study.png');
+  Image get image => Image.asset('assets/images/running.png');
   String get title => _study == null
       ? 'No Study'
       : _study?.isDeployed == false

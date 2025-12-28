@@ -13,35 +13,28 @@ class StudyPageState extends State<StudyPage> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        body: ListenableBuilder(
-          listenable: model,
-          builder: (BuildContext context, Widget? child) => CustomScrollView(
-            slivers: <Widget>[
-              SliverAppBar(
-                expandedHeight: 256.0,
-                pinned: true,
-                floating: false,
-                snap: false,
-                actions: <Widget>[
-                  IconButton(
-                    icon: Icon(Icons.refresh, size: 30),
-                    tooltip: 'Refresh',
-                    onPressed: _refreshDeploymentStatus,
-                  ),
-                ],
-                flexibleSpace: FlexibleSpaceBar(
-                  title: Text(model.title),
-                  background: Stack(
-                    fit: StackFit.expand,
-                    children: <Widget>[model.image],
-                  ),
-                ),
+    body: ListenableBuilder(
+      listenable: model,
+      builder: (BuildContext context, Widget? child) => CustomScrollView(
+        slivers: <Widget>[
+          SliverAppBar(
+            expandedHeight: 256.0,
+            pinned: true,
+            floating: false,
+            snap: false,
+            flexibleSpace: FlexibleSpaceBar(
+              title: Text(model.title),
+              background: Stack(
+                fit: StackFit.expand,
+                children: <Widget>[model.image],
               ),
-              SliverList(delegate: SliverChildListDelegate(_studyPanel())),
-            ],
+            ),
           ),
-        ),
-      );
+          SliverList(delegate: SliverChildListDelegate(_studyPanel())),
+        ],
+      ),
+    ),
+  );
 
   /// Show an info [message] in a snackbar.
   void _showInfo(String message) {
@@ -75,7 +68,7 @@ class StudyPageState extends State<StudyPage> {
         border: Border(bottom: BorderSide(color: themeData.dividerColor)),
       ),
       child: DefaultTextStyle(
-        style: themeData.textTheme.titleMedium!,
+        style: themeData.textTheme.bodyMedium!,
         child: SafeArea(
           top: false,
           bottom: false,
@@ -85,8 +78,11 @@ class StudyPageState extends State<StudyPage> {
               Container(
                 padding: const EdgeInsets.symmetric(vertical: 24.0),
                 width: 72.0,
-                child: Icon(Icons.lightbulb_outline,
-                    size: 50, color: CachetColors.DARK_BLUE),
+                child: Icon(
+                  Icons.lightbulb_outline,
+                  size: 50,
+                  color: CachetColors.ORANGE,
+                ),
               ),
               Expanded(
                 child: Column(
@@ -116,14 +112,14 @@ class StudyPageState extends State<StudyPage> {
                     StreamBuilder<ExecutorState>(
                       stream: model.executorStateEvents,
                       initialData: ExecutorState.Created,
-                      builder: (_, __) => _StudyControllerLine(
+                      builder: (_, _) => _StudyControllerLine(
                         model.executorState.name,
                         heading: 'Executor State',
                       ),
                     ),
                     StreamBuilder<Measurement>(
                       stream: model.measurements,
-                      builder: (_, __) => _StudyControllerLine(
+                      builder: (_, _) => _StudyControllerLine(
                         '${model.samplingSize}',
                         heading: 'Sample Size',
                       ),
@@ -136,12 +132,6 @@ class StudyPageState extends State<StudyPage> {
         ),
       ),
     );
-  }
-
-  /// Refresh the deployment status from the deployment service.
-  void _refreshDeploymentStatus() {
-    _showInfo('Refreshing study deployment status...');
-    model.refreshStudyDeploymentStatus();
   }
 }
 
@@ -181,7 +171,7 @@ class _TaskPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData themeData = Theme.of(context);
-    final List<Widget> children =
+    final List<Widget> measureLines =
         task!.measures?.map((measure) => _MeasureLine(measure)).toList() ?? [];
 
     return Container(
@@ -201,12 +191,11 @@ class _TaskPanel extends StatelessWidget {
                   Icon(Icons.description, size: 40, color: CachetColors.ORANGE),
                   Text(
                     '  ${task!.name}',
-                    style: themeData.textTheme.titleLarge,
+                    style: themeData.textTheme.titleMedium,
                   ),
                 ],
               ),
-              Column(children: children),
-              //Expanded(child: Column(children: children))
+              Column(children: measureLines),
             ],
           ),
         ),
@@ -227,16 +216,24 @@ class _MeasureLine extends StatelessWidget {
         ? Icon(ProbeDescription.descriptors[measure.type]!.icon?.icon, size: 25)
         : Icon(Icons.error, size: 25);
 
-    final String name = SamplingPackageRegistry()
+    final name =
+        SamplingPackageRegistry()
             .samplingSchemes[measure.type]
             ?.dataType
             .displayName ??
         measure.type.split('.').last.toUpperCase();
 
-    final List<Widget> columnChildren = [];
-    columnChildren.add(Text(name));
+    final columnChildren = <Widget>[];
     columnChildren.add(
-      Text(measure.toString(), style: themeData.textTheme.bodySmall),
+      Text(
+        name,
+        style: themeData.textTheme.bodyMedium?.copyWith(
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+    columnChildren.add(
+      Text(measure.type, style: themeData.textTheme.bodySmall),
     );
 
     final List<Widget> rowChildren = [];

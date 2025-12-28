@@ -41,7 +41,7 @@ class Sensing {
     SamplingPackageRegistry().register(MediaSamplingPackage());
     SamplingPackageRegistry().register(SurveySamplingPackage());
     SamplingPackageRegistry().register(ConnectivitySamplingPackage());
-    SamplingPackageRegistry().register(CommunicationSamplingPackage());
+    // SamplingPackageRegistry().register(CommunicationSamplingPackage());
     SamplingPackageRegistry().register(AppsSamplingPackage());
 
     // Register the special-purpose audio user task factory
@@ -51,9 +51,10 @@ class Sensing {
   /// Initialize and set up sensing.
   Future<void> initialize() async {
     info('Initializing $runtimeType');
+    await Settings().init();
 
-    // Configure the client manager with the deployment service selected above
-    // (local or CAWS).
+    info('$runtimeType - Configuring client...');
+
     await client.configure(
       deploymentService: deploymentService,
       askForPermissions: true,

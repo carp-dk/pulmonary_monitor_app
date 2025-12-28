@@ -120,26 +120,26 @@ class ProbeDescription {
           'Collects app usage statistics.',
           Icon(Icons.get_app, size: 50, color: CachetColors.LIGHT_GREEN),
         ),
-        CommunicationSamplingPackage.TEXT_MESSAGE_LOG: ProbeDescriptor(
-          'Text Messages',
-          'Collects the SMS message log.',
-          Icon(Icons.textsms, size: 50, color: CachetColors.LIGHT_PURPLE),
-        ),
-        CommunicationSamplingPackage.TEXT_MESSAGE: ProbeDescriptor(
-          'Text Message',
-          'Collecting in/out-going SMS text messages.',
-          Icon(Icons.text_fields, size: 50, color: CachetColors.LIGHT_PURPLE),
-        ),
-        CommunicationSamplingPackage.PHONE_LOG: ProbeDescriptor(
-          'Phone Log',
-          'Collects the phone call log.',
-          Icon(Icons.phone_in_talk, size: 50, color: CachetColors.ORANGE),
-        ),
-        CommunicationSamplingPackage.CALENDAR: ProbeDescriptor(
-          'Calendar',
-          'Collects entries from phone calendars.',
-          Icon(Icons.event, size: 50, color: CachetColors.CYAN),
-        ),
+        // CommunicationSamplingPackage.TEXT_MESSAGE_LOG: ProbeDescriptor(
+        //   'Text Messages',
+        //   'Collects the SMS message log.',
+        //   Icon(Icons.textsms, size: 50, color: CachetColors.LIGHT_PURPLE),
+        // ),
+        // CommunicationSamplingPackage.TEXT_MESSAGE: ProbeDescriptor(
+        //   'Text Message',
+        //   'Collecting in/out-going SMS text messages.',
+        //   Icon(Icons.text_fields, size: 50, color: CachetColors.LIGHT_PURPLE),
+        // ),
+        // CommunicationSamplingPackage.PHONE_LOG: ProbeDescriptor(
+        //   'Phone Log',
+        //   'Collects the phone call log.',
+        //   Icon(Icons.phone_in_talk, size: 50, color: CachetColors.ORANGE),
+        // ),
+        // CommunicationSamplingPackage.CALENDAR: ProbeDescriptor(
+        //   'Calendar',
+        //   'Collects entries from phone calendars.',
+        //   Icon(Icons.event, size: 50, color: CachetColors.CYAN),
+        // ),
         DeviceSamplingPackage.SCREEN_EVENT: ProbeDescriptor(
           'Screen',
           'Screen events (on/off/unlock).',

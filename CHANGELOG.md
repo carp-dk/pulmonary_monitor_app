@@ -1,3 +1,10 @@
+## 2.0.0
+
+* upgrade to Dart `sdk >=3.10.0`
+* upgrade to Kotlin gradle build files
+* upgrade to `carp_mobile_sensing` v 2.0.0
+* added example of an app task collecting health data, incl. permissions in the `AndroidManifest.xml` to access health data
+
 ## 1.1.0
 
 * upgrade to `carp_mobile_sensing` v 1.1.0

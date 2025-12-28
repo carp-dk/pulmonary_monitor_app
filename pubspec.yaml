@@ -1,11 +1,11 @@
 name: pulmonary_monitor_app
-description: App for monitoring of pulmonary (i.e. respiratory) health build using CARP.
+description: App for monitoring of pulmonary (i.e. respiratory) health build using the CARP Mobile Sensing Framework.
 version: 2.0.0
 homepage: https://github.com/cph-cachet/pulmonary_monitor_app
 publish_to: 'none'
 
 environment:
-  sdk: ">=3.3.0 <4.0.0"
+  sdk: ">=3.10.0 <4.0.0"
   flutter: ">=3.19.0"
 
 platforms:
@@ -16,20 +16,37 @@ dependencies:
   flutter:
     sdk: flutter
 
+  # The CARP packages used by the app.
   # carp_core: ^1.8.0
   # carp_mobile_sensing: ^1.12.5
   # carp_context_package: ^1.10.0
   # carp_connectivity_package: ^1.4.0
   # carp_survey_package: ^1.8.0
   # carp_audio_package: ^1.4.0
-  # carp_communication_package: ^1.4.0
+  # carp_apps_package: ^1.6.0
+  # carp_health_package: ^1.8.0
   
-  research_package: ^2.0.0
-  cognition_package: ^1.6.0
+  # research_package: ^2.0.0
+  # cognition_package: ^1.6.0
 
-  flutter_launcher_icons: ^0.14.0
+  # Packages used by CAMS. For some reason, we need to explicitly depend on them here - otherwise, 
+  # the app will not launch even though it does compile.
+  battery_plus: ^7.0.0
+  # device_calendar: ^4.3.1
+  device_info_plus: ^12.1.0
+  flutter_local_notifications: ^19.4.2
+  location: ^8.0.1
+  package_info_plus: ^8.3.1
+  permission_handler: '>=11.0.0 <13.0.0'
+  shared_preferences: ^2.5.0
+  sqflite: ^2.4.2
+  # health: ^13.2.0
+  # flutter_blue_plus: '>=1.29.0 <3.0.0'
 
-# Overriding carp libraries to use a local copy
+  flutter_launcher_icons: ^0.14.0 # For setting app launch icons. See below.
+
+
+# Overriding carp libraries to use a local copy for debugging and development.
 dependency_overrides:
   carp_core:
     path: ../carp/carp.sensing-flutter/carp_core/
@@ -43,57 +60,23 @@ dependency_overrides:
     path: ../carp/carp.sensing-flutter/packages/carp_audio_package/
   carp_survey_package:
     path: ../carp/carp.sensing-flutter/packages/carp_survey_package/
-  carp_communication_package:
-    path: ../carp/carp.sensing-flutter/packages/carp_communication_package/
   carp_apps_package:
     path: ../carp/carp.sensing-flutter/packages/carp_apps_package/
   carp_health_package:
     path: ../carp/carp.sensing-flutter/packages/carp_health_package/
 
+  research_package:
+    path: ../research.package/  
+  cognition_package:
+    path: ../cognition_package/  
 
-  # cognition_package:
-  #   path: ../cognition_package/  
-
-# Overriding carp libraries to use github branch
-# dependency_overrides:  
-#   carp_core:
-#     git:
-#       url: https://github.com/cph-cachet/carp.sensing-flutter.git
-#       ref: develop
-#       path: carp_core
-#   carp_mobile_sensing:
-#     git:
-#       url: https://github.com/cph-cachet/carp.sensing-flutter.git
-#       ref: develop
-#       path: carp_mobile_sensing
-#   carp_context_package:
-#     git:
-#       url: https://github.com/cph-cachet/carp.sensing-flutter.git
-#       ref: develop
-#       path: packages/carp_context_package/
-#   carp_survey_package:
-#     git:
-#       url: https://github.com/cph-cachet/carp.sensing-flutter.git
-#       ref: develop
-#       path: packages/carp_survey_package/
-#   carp_connectivity_package:
-#     git:
-#       url: https://github.com/cph-cachet/carp.sensing-flutter.git
-#       ref: develop
-#       path: packages/carp_connectivity_package/
-#   carp_audio_package:
-#     git:
-#       url: https://github.com/cph-cachet/carp.sensing-flutter.git
-#       ref: develop
-#       path: packages/carp_audio_package/
-#   research_package:
-#     git:
-#       url: https://github.com/cph-cachet/research.package.git
-#       ref: dev-carp-core-0_40_0
+  # due to this issue https://github.com/builttoroam/device_calendar/issues/586 
+  device_calendar:
+    git: https://github.com/bardram/device_calendar
 
 dev_dependencies:
-#  flutter_test:
-#    sdk: flutter
+  flutter_test:
+    sdk: flutter
   test: any 
   flutter_lints: any
 
@@ -107,7 +90,7 @@ dev_dependencies:
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/lungs.png"
+  image_path: "assets/logo/lungs.png"
 
 
 # The following section is specific to Flutter.
@@ -117,6 +100,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
    - assets/logo/cachet_logo.png
+   - assets/images/carp_logo_example.png
    - assets/logo/lungs.png
    - assets/images/maui.png
    - assets/images/running.png
