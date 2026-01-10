@@ -94,17 +94,17 @@ class TaskListPageState extends State<TaskListPage> {
   }
 
   Map<String, Icon> get taskTypeIcon => {
-    SurveyUserTask.SURVEY_TYPE: const Icon(
+    AppTask.SURVEY_TYPE: const Icon(
       Icons.description,
       color: CachetColors.ORANGE,
       size: 40,
     ),
-    SurveyUserTask.COGNITIVE_ASSESSMENT_TYPE: const Icon(
+    AppTask.COGNITIVE_ASSESSMENT_TYPE: const Icon(
       Icons.face,
       color: CachetColors.YELLOW,
       size: 40,
     ),
-    AudioUserTask.AUDIO_TYPE: const Icon(
+    AppTask.AUDIO_TYPE: const Icon(
       Icons.record_voice_over,
       color: CachetColors.GREEN,
       size: 40,

@@ -72,7 +72,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
       BackgroundTask(
         name: 'Activity',
         measures: [
-          Measure(type: SensorSamplingPackage.STEP_COUNT),
+          Measure(type: SensorSamplingPackage.STEP_EVENT),
           Measure(type: ContextSamplingPackage.ACTIVITY),
         ],
       ),
@@ -114,7 +114,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     );
 
     var symptomsTask = RPAppTask(
-      type: SurveyUserTask.SURVEY_TYPE,
+      type: AppTask.SURVEY_TYPE,
       name: 'Symptoms Survey',
       title: surveys.symptoms.title,
       description: surveys.symptoms.description,
@@ -124,7 +124,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     );
 
     var demographicsTask = RPAppTask(
-      type: SurveyUserTask.SURVEY_TYPE,
+      type: AppTask.SURVEY_TYPE,
       name: 'Demographics Survey',
       title: surveys.demographics.title,
       description: surveys.demographics.description,
@@ -138,7 +138,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // Also collect current location, and local weather and air quality of this
     // sample.
     var coughingTask = AppTask(
-      type: AudioUserTask.AUDIO_TYPE,
+      type: AppTask.AUDIO_TYPE,
       name: 'Coughing Task',
       title: "Coughing",
       description:
@@ -163,7 +163,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // Note that this task also collects accelerometer and gyroscope data
     // while the user is performing the tests.
     var cognitionTask = RPAppTask(
-      type: SurveyUserTask.COGNITIVE_ASSESSMENT_TYPE,
+      type: AppTask.COGNITIVE_ASSESSMENT_TYPE,
       name: 'Cognition Assessment',
       title: "Cognition Assessment",
       description:
@@ -227,50 +227,46 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     //     ),
     //     phone);
 
-    // Collect a coughing sample every evening at 19:00 based on a cron expression.
-    protocol.addTaskControl(
-      CronScheduledTrigger.parse(cronExpression: '0 19 * * *'),
-      coughingTask,
-      phone,
-    );
-
-    // Always keep a Parkinson's task on the list.
-    protocol.addTaskControl(
-      NoUserTaskTrigger(taskName: cognitionTask.name),
-      cognitionTask,
-      phone,
-    );
-
-    // Collect symptoms daily at 13:30
-    protocol.addTaskControl(
-      RecurrentScheduledTrigger(
-        type: RecurrentType.daily,
-        time: const TimeOfDay(hour: 13, minute: 30),
-      ),
-      symptomsTask,
-      phone,
-    );
-
-    // // Add the symptoms task and make sure to that it keeps reappearing when done.
-    // protocol.addTaskControl(OneTimeTrigger(), symptomsTask, phone);
+    // // Collect a coughing sample every evening at 19:00 based on a cron expression.
     // protocol.addTaskControl(
-    //   UserTaskTrigger(
-    //     taskName: symptomsTask.name,
-    //     triggerCondition: UserTaskState.done,
+    //   CronScheduledTrigger.parse(cronExpression: '0 19 * * *'),
+    //   coughingTask,
+    //   phone,
+    // );
+
+    // // Always keep a Cognitive Assessment task on the list.
+    // protocol.addTaskControl(
+    //   NoUserTaskTrigger(taskName: cognitionTask.name),
+    //   cognitionTask,
+    //   phone,
+    // );
+
+    // // Collect symptoms daily at 13:30
+    // protocol.addTaskControl(
+    //   RecurrentScheduledTrigger(
+    //     type: RecurrentType.daily,
+    //     time: const TimeOfDay(hour: 13, minute: 30),
     //   ),
     //   symptomsTask,
     //   phone,
     // );
 
-    // // When a symptoms task is done, also make a coughing task available.
-    // protocol.addTaskControl(
-    //   UserTaskTrigger(
-    //     taskName: symptomsTask.name,
-    //     triggerCondition: UserTaskState.done,
-    //   ),
-    //   coughingTask,
-    //   phone,
-    // );
+    // Always keep a Symptoms assessment task on the list.
+    protocol.addTaskControl(
+      NoUserTaskTrigger(taskName: symptomsTask.name),
+      symptomsTask,
+      phone,
+    );
+
+    // When a symptoms task is done, trigger the coughing and cognition tasks.
+    protocol.addTaskControls(
+      UserTaskTrigger(
+        taskName: symptomsTask.name,
+        triggerCondition: UserTaskState.done,
+      ),
+      [coughingTask, cognitionTask],
+      phone,
+    );
 
     return protocol;
   }

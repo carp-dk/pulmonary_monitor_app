@@ -7,8 +7,6 @@ part of '../main.dart';
 /// When the recording is started (calling the [onRecord] method),
 /// the background task collecting sensor measures is started.
 class AudioUserTask extends UserTask {
-  static const String AUDIO_TYPE = 'audio';
-
   final StreamController<int> _countDownController =
       StreamController.broadcast();
   Stream<int> get countDownEvents => _countDownController.stream;
@@ -50,14 +48,12 @@ class AudioUserTask extends UserTask {
 /// In this case an [AudioUserTask].
 class PulmonaryUserTaskFactory implements UserTaskFactory {
   @override
-  List<String> types = [
-    AudioUserTask.AUDIO_TYPE,
-  ];
+  List<String> types = [AppTask.AUDIO_TYPE];
 
   @override
   UserTask create(AppTaskExecutor executor) {
     switch (executor.task.type) {
-      case AudioUserTask.AUDIO_TYPE:
+      case AppTask.AUDIO_TYPE:
         return AudioUserTask(executor);
       default:
         return BackgroundSensingUserTask(executor);
