@@ -15,7 +15,7 @@ import 'package:flutter/material.dart' hide TimeOfDay;
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import 'package:carp_core/carp_core.dart';
+import 'package:carp_core/carp_core.dart' hide Smartphone;
 import 'package:carp_mobile_sensing/carp_mobile_sensing.dart';
 import 'package:carp_connectivity_package/connectivity.dart';
 import 'package:carp_context_package/carp_context_package.dart';

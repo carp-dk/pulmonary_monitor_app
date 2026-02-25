@@ -31,7 +31,12 @@ dependencies:
 
   # Packages used by CAMS. For some reason, we need to explicitly depend on them here - otherwise, 
   # the app will not launch even though it does compile.
+  flutter_timezone: ^5.0.0
+  path_provider: ^2.1.0
   battery_plus: ^7.0.0
+  screen_state: ^4.0.0
+  pedometer: ^4.2.0
+  flutter_activity_recognition: ^4.0.0
   # device_calendar: ^4.3.1
   device_info_plus: ^12.1.0
   flutter_local_notifications: ^19.4.2
