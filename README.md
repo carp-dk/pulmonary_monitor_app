@@ -6,7 +6,7 @@ It is build using the [CARP Mobile Sensing](https://pub.dev/packages/carp_mobile
 It follows the Flutter Model-View-ViewModel (MVVM) software architecture, similar to the
 [CARP Mobile Sensing App](https://github.com/carp-dk/carp.sensing-flutter/tree/main/apps/carp_mobile_sensing_app).
 
-In particular, this app is designed to demonstrate how the CAMS [`AppTask`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/AppTask-class.html) is used. An elaborate presentation of the app task model is available on the [CAMS wiki](https://github.com/cph-cachet/carp.sensing-flutter/wiki/4.-The-AppTask-Model).
+In particular, this app is designed to demonstrate how the CAMS [`AppTask`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/AppTask-class.html) is used. An elaborate presentation of the [App Task Model](http://docs.carp.dk/carp-mobile-sensing/app-task-model) is available on [docs.carp.dk](http://docs.carp.dk/carp-mobile-sensing/).
 
 ## Design Rationale
 
@@ -66,33 +66,51 @@ protocol.addPrimaryDevice(phone);
 
 ...
 
-// add an app task that once pr. hour asks the user to
-// collect weather and air quality - and notify the user
+// Create an app task that collects location, air quality and weather data,
+// and notify the user.
+//
+// Note that for this to work, the LocationService, AirQualityService, and
+// WeatherService needs to be defined and added as connected devices to
+// this phone.
+var environmentTask = AppTask(
+  type: AppTask.SENSING_TYPE,
+  name: 'Environment Task',
+  title: "Location, Weather & Air Quality",
+  description: "Collect location, weather and air quality",
+  notification: true,
+  measures: [
+    Measure(type: ContextSamplingPackage.LOCATION)
+      // Override the default sampling configuration to just get
+      // a single location sample each time the task is triggered.
+      // Otherwise, the default configuration for location is to do continuous
+      // sampling, which is not what we want here.
+      ..overrideSamplingConfiguration = LocationSamplingConfiguration(
+        once: true,
+      ),
+    Measure(type: ContextSamplingPackage.WEATHER),
+    Measure(type: ContextSamplingPackage.AIR_QUALITY),
+  ],
+);
+
+// Make sure to always have an environment task on the list by using a NoUserTaskTrigger.
 protocol.addTaskControl(
-    PeriodicTrigger(period: Duration(hours: 1)),
-    AppTask(
-        type: BackgroundSensingUserTask.SENSING_TYPE,
-        title: "Location, Weather & Air Quality",
-        description: "Collect location, weather and air quality",
-        notification: true,
-        measures: [
-          Measure(type: ContextSamplingPackage.LOCATION),
-          Measure(type: ContextSamplingPackage.WEATHER),
-          Measure(type: ContextSamplingPackage.AIR_QUALITY),
-        ]),
-    phone);
+  NoUserTaskTrigger(taskName: environmentTask.name),
+  environmentTask,
+  phone,
+);
 ````
 
-The above code adds an [`PeriodicTrigger`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/PeriodicTrigger-class.html) with an [`AppTask`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/AppTask-class.html) of type `sensing`.
+The above code adds an [`NoUserTaskTrigger`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/NoUserTaskTrigger-class.html) with an [`AppTask`](https://pub.dev/documentation/carp_mobile_sensing/latest/domain/AppTask-class.html) of type `sensing`.
 This app task contains the three measures of location, weather, and air quality.
-The result of this sensing configuration is that an app task is added to the task list every hour, and when it is activated by the user (by pushing the `PRESS HERE TO FINISH TASK` button), the measurements are collected during a 10-second window. When the measurements have been collected, the app task is marked as "done" in the task list, illustrated by a green check mark as shown in Figure 2.
+The result of this sensing configuration is that an app task is added to the task list if it is not already there - i.e., this app task will reappear when done. When the task is activated by the user (by pushing the `PRESS HERE TO FINISH TASK` button), the measurements are collected during a 10-second window. When the measurements have been collected, the app task is marked as "done" in the task list, illustrated by a green check mark as shown in Figure 2.
 
 ![pm_2](https://user-images.githubusercontent.com/1196642/100003816-f3ae6800-2dc6-11eb-9734-381a8b376a10.png)
 
 **Figure 2** - Task list with a "done" sensing task.
 
 This app task has also enabled `notification` and a notification about this task will be added to the phone's notification system.
-If the user presses this notification, s/he is taken to the app (but **NOT** the task itself (this is a more complicated issue, which is supported by CAMS, but not implemented in the PulmonaryMonitor app (yet))).
+If the user presses this notification, s/he is taken to the app and the background sensing is started and the data is collected.
+For other tasks - like the cognition task below - nothing happens when the user click the notification (this is a more complicated issue, which is supported by CAMS, but not implemented in the PulmonaryMonitor app (yet)).
 If the user does the task from the app (by pushing the `PRESS HERE TO FINISH TASK` button), the notification will be removed again.
 
 ### Survey App Task
@@ -305,7 +323,7 @@ App tasks rely on sending notifications and CAMS uses  [flutter_local_notificati
 
 In particular, it is important to update the Android `AndroidManifest.xml` and `build.gradle` (for "desugaring"), and the iOS `Info.plist` and `AppDelegate.swift` files to contain the needed permissions and configuration, as specified in the [configuration](https://pub.dev/packages/carp_mobile_sensing#configuration) of CAMS and its sampling packages.
 
-On Android, also remember to add the `app_icon.png` to the `android/app/src/main/res/drawable/` folder.
+On Android, also remember to add the `ic_launcher.png` to the `android/app/src/main/res/drawable/` folder.
 
 ### Permissions
 

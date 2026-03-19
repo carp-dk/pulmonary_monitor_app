@@ -48,6 +48,10 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     );
     protocol.addConnectedDevice(airQualityService, phone);
 
+    // Create and add a health service (device)
+    final healthService = HealthService();
+    protocol.addConnectedDevice(healthService, phone);
+
     // --------- BACKGROUND TASKS ---------
 
     // Device data
@@ -95,19 +99,27 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
 
     // --------- APP / USER TASKS ---------
 
-    // Create an app task that collects air quality and weather data,
+    // Create an app task that collects location, air quality and weather data,
     // and notify the user.
     //
-    // Note that for this to work, the air_quality and weather services needs
-    // to be defined and added as connected devices to this phone.
+    // Note that for this to work, the LocationService, AirQualityService, and
+    // WeatherService needs to be defined and added as connected devices to
+    // this phone.
     var environmentTask = AppTask(
-      type: BackgroundSensingUserTask.SENSING_TYPE,
+      type: AppTask.SENSING_TYPE,
       name: 'Environment Task',
       title: "Location, Weather & Air Quality",
       description: "Collect location, weather and air quality",
       notification: true,
       measures: [
-        Measure(type: ContextSamplingPackage.LOCATION),
+        Measure(type: ContextSamplingPackage.LOCATION)
+          // Override the default sampling configuration to just get
+          // a single location sample each time the task is triggered.
+          // Otherwise, the default configuration for location is to do continuous
+          // sampling, which is not what we want here.
+          ..overrideSamplingConfiguration = LocationSamplingConfiguration(
+            once: true,
+          ),
         Measure(type: ContextSamplingPackage.WEATHER),
         Measure(type: ContextSamplingPackage.AIR_QUALITY),
       ],
@@ -160,7 +172,7 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
     // This is strictly speaking not part of monitoring pulmonary symptoms,
     // but is included to illustrate the use of cognitive tests from the
     // cognition package.
-    // Note that this task also collects accelerometer and gyroscope data
+    // Note that this task also collects movement (accelerometer & gyroscope) data
     // while the user is performing the tests.
     var cognitionTask = RPAppTask(
       type: AppTask.COGNITIVE_ASSESSMENT_TYPE,
@@ -198,6 +210,19 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
       measures: [
         Measure(type: SensorSamplingPackage.ACCELERATION),
         Measure(type: SensorSamplingPackage.ROTATION),
+      ],
+    );
+
+    var healthTask = HealthAppTask(
+      title: "Press here to collect your physical health data",
+      description:
+          "This will collect your weight, exercise time, steps, and sleep "
+          "time from the Health database on the phone.",
+      types: [
+        HealthDataType.WEIGHT,
+        HealthDataType.STEPS,
+        HealthDataType.BASAL_ENERGY_BURNED,
+        HealthDataType.SLEEP_SESSION,
       ],
     );
 
@@ -265,6 +290,16 @@ class LocalStudyProtocolManager implements StudyProtocolManager {
         triggerCondition: UserTaskState.done,
       ),
       [coughingTask, cognitionTask],
+      phone,
+    );
+
+    // When a the user is sitting still, add a task that collects health data
+    protocol.addTaskControl(
+      SamplingEventTrigger(
+        measureType: ContextSamplingPackage.ACTIVITY,
+        triggerCondition: Activity(type: ActivityType.STILL, confidence: 90),
+      ),
+      healthTask,
       phone,
     );
 

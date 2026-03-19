@@ -13,7 +13,7 @@ class ProbeDescription {
       'Error.',
       Icon(Icons.error, size: 50, color: CachetColors.GREY_4),
     ),
-    MonitoringSamplingPackage.HEARTBEAT: ProbeDescriptor(
+    DeviceSamplingPackage.HEARTBEAT: ProbeDescriptor(
       'Heartbeat',
       'Device heartbeat.',
       Icon(Icons.important_devices_sharp, size: 50, color: CachetColors.GREY_4),
@@ -106,36 +106,26 @@ class ProbeDescription {
       "Ambient noise level in decibel as detected by the phone's microphone.",
       Icon(Icons.hearing, size: 50, color: CachetColors.YELLOW),
     ),
-    AppsSamplingPackage.APPS: ProbeDescriptor(
-      'Apps',
-      'Collects a list of installed apps.',
-      Icon(Icons.apps, size: 50, color: CachetColors.LIGHT_GREEN),
+    CommunicationSamplingPackage.TEXT_MESSAGE_LOG: ProbeDescriptor(
+      'Text Messages',
+      'Collects the SMS message log.',
+      Icon(Icons.textsms, size: 50, color: CachetColors.LIGHT_PURPLE),
     ),
-    AppsSamplingPackage.APP_USAGE: ProbeDescriptor(
-      'App Usage',
-      'Collects app usage statistics.',
-      Icon(Icons.get_app, size: 50, color: CachetColors.LIGHT_GREEN),
+    CommunicationSamplingPackage.TEXT_MESSAGE: ProbeDescriptor(
+      'Text Message',
+      'Collecting in/out-going SMS text messages.',
+      Icon(Icons.text_fields, size: 50, color: CachetColors.LIGHT_PURPLE),
     ),
-    // CommunicationSamplingPackage.TEXT_MESSAGE_LOG: ProbeDescriptor(
-    //   'Text Messages',
-    //   'Collects the SMS message log.',
-    //   Icon(Icons.textsms, size: 50, color: CachetColors.LIGHT_PURPLE),
-    // ),
-    // CommunicationSamplingPackage.TEXT_MESSAGE: ProbeDescriptor(
-    //   'Text Message',
-    //   'Collecting in/out-going SMS text messages.',
-    //   Icon(Icons.text_fields, size: 50, color: CachetColors.LIGHT_PURPLE),
-    // ),
-    // CommunicationSamplingPackage.PHONE_LOG: ProbeDescriptor(
-    //   'Phone Log',
-    //   'Collects the phone call log.',
-    //   Icon(Icons.phone_in_talk, size: 50, color: CachetColors.ORANGE),
-    // ),
-    // CommunicationSamplingPackage.CALENDAR: ProbeDescriptor(
-    //   'Calendar',
-    //   'Collects entries from phone calendars.',
-    //   Icon(Icons.event, size: 50, color: CachetColors.CYAN),
-    // ),
+    CommunicationSamplingPackage.PHONE_LOG: ProbeDescriptor(
+      'Phone Log',
+      'Collects the phone call log.',
+      Icon(Icons.phone_in_talk, size: 50, color: CachetColors.ORANGE),
+    ),
+    CommunicationSamplingPackage.CALENDAR: ProbeDescriptor(
+      'Calendar',
+      'Collects entries from phone calendars.',
+      Icon(Icons.event, size: 50, color: CachetColors.CYAN),
+    ),
     DeviceSamplingPackage.SCREEN_EVENT: ProbeDescriptor(
       'Screen',
       'Screen events (on/off/unlock).',
