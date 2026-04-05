@@ -36,7 +36,7 @@ class AudioUserTask extends UserTask {
         _timer?.cancel();
         _countDownController.close();
 
-        // stop the background sensing and mark this task as done
+        // pause the background sensing and mark this task as done
         backgroundTaskExecutor.pause();
         super.onDone();
       }
