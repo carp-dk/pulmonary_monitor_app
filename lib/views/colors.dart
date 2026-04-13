@@ -1,6 +1,6 @@
 part of '../main.dart';
 
-class CACHET {
+class CachetColors {
   static const Color CACHET_BLUE = Color.fromRGBO(97, 195, 217, 1.0);
   static const Color RED = Color.fromRGBO(213, 11, 51, 1.0);
   static const Color WHITE = Color.fromRGBO(255, 255, 255, 1.0);
